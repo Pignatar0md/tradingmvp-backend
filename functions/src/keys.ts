@@ -1,4 +1,4 @@
-export const FIREBASE_DATABASE_URL = process.env.FIREBASE_DATABASE_URL;
+export const fbase_db_url = process.env.FBASE_DB_URL;
 export const striga_api = process.env.STRIGA_API;
 export const striga_secret = process.env.STRIGA_SECRET;
 export const striga_key = process.env.STRIGA_KEY;
