@@ -1,12 +1,15 @@
 import crypto from "crypto";
-import { STRIGA_KEY } from "./keys";
+import * as functions from "firebase-functions";
 
 const calcSig = (
 	body: object,
 	method: "GET" | "POST" | "PUT" | "DELETE",
 	endpoint: string
 ) => {
-	const hmac = crypto.createHmac("sha256", STRIGA_KEY);
+	const hmac = crypto.createHmac(
+		"sha256",
+		functions.config().striga.striga_key!
+	);
 	const time = Date.now().toString();
 
 	hmac.update(time);

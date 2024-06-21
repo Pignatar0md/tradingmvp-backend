@@ -49,7 +49,8 @@ node_modules/
 
 # Optional npm cache directory
 .npm
-
+functions/lib/*
+functions/src/*.json
 # Optional eslint cache
 .eslintcache
 

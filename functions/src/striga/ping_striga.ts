@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import axios from "axios";
 import calcSig from "./calculate_signature";
-import { STRIGA_API, STRIGA_SECRET } from "./striga";
+import * as functions from "firebase-functions";
 
 const pingStriga = (req: Request, res: Response<any>) => {
 	const method = "POST";
@@ -9,14 +9,14 @@ const pingStriga = (req: Request, res: Response<any>) => {
 	const body = { ping: "pong" };
 	const calculateSignature = calcSig(body, method, TEST_ENDPOINT);
 
-	const fullURL = `${STRIGA_API}${TEST_ENDPOINT}`;
+	const fullURL = `${functions.config().striga.striga_api}${TEST_ENDPOINT}`;
 	let config = {
 		method,
 		url: fullURL,
 		headers: {
 			Authorization: calculateSignature,
 			"Content-Type": "application/json",
-			"api-key": STRIGA_SECRET,
+			"api-key": functions.config().striga.secret,
 		},
 		data: body,
 	};
