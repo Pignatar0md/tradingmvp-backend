@@ -1,9 +1,12 @@
 import admin from "firebase-admin";
 import { Request, Response } from "express";
 
-const verifyOnetimePassword = (req: Request, res: Response<any>) => {
+const verifyOnetimePassword = (
+	req: Request,
+	res: Response<any>
+): Promise<void> => {
 	if (!req.body.phone || !req.body.code) {
-		return res.status(422).send({
+		res.status(422).send({
 			error: "Phone and code must be provided",
 		});
 	}
@@ -11,7 +14,7 @@ const verifyOnetimePassword = (req: Request, res: Response<any>) => {
 	const phone = String(req.body.phone).replace(/[^\d]/g, "");
 	const code = parseInt(req.body.code);
 
-	admin
+	return admin
 		.auth()
 		.getUser(phone)
 		.then(() => {
@@ -21,7 +24,7 @@ const verifyOnetimePassword = (req: Request, res: Response<any>) => {
 				const user = snapshot.val();
 
 				if (user.code !== code || !user.codeValid) {
-					return res.status(422).send({ error: "code not valid" });
+					res.status(422).send({ error: "code not valid" });
 				}
 
 				ref.update({ codeValid: false });
@@ -31,13 +34,11 @@ const verifyOnetimePassword = (req: Request, res: Response<any>) => {
 					.then((token: string) => {
 						res.send({ token });
 					});
-				return;
 			});
 		})
 		.catch((error) => {
 			res.status(422).send({ error });
 		});
-	return;
 };
 
 export default verifyOnetimePassword;

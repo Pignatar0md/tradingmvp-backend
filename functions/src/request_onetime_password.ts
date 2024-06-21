@@ -1,6 +1,7 @@
 import * as admin from "firebase-admin";
+import * as functions from "firebase-functions";
 import { Request, Response } from "express";
-import Twilio, { PHONE_NUMBER_TWILIO } from "./twilio";
+import Twilio from "./twilio/twilio";
 
 const requestOnetimePassword = (req: Request, res: Response<any>) => {
 	if (!req.body.phone) {
@@ -20,7 +21,7 @@ const requestOnetimePassword = (req: Request, res: Response<any>) => {
 				{
 					body: `Your code is ${code}`,
 					to: `+${phone}`,
-					from: PHONE_NUMBER_TWILIO,
+					from: functions.config().twilio.phone_number_twilio,
 				},
 				(error) => {
 					if (error) {
