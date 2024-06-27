@@ -1,7 +1,7 @@
 import admin from "firebase-admin";
 import { Request, Response } from "express";
 
-const verifyOnetimePassword = (
+const authenticateUsingOnetimePassword = (
 	req: Request,
 	res: Response<any>
 ): Promise<void> => {
@@ -26,8 +26,14 @@ const verifyOnetimePassword = (
 				if (user.code !== code || !user.codeValid) {
 					res.status(422).send({ error: "code not valid" });
 				}
+
 				ref.update({ codeValid: false });
-				res.send({ success: true });
+				admin
+					.auth()
+					.createCustomToken(phone)
+					.then((token: string) => {
+						res.send({ token });
+					});
 			});
 		})
 		.catch((error) => {
@@ -35,4 +41,4 @@ const verifyOnetimePassword = (
 		});
 };
 
-export default verifyOnetimePassword;
+export default authenticateUsingOnetimePassword;
