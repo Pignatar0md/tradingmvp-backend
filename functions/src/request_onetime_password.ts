@@ -30,7 +30,7 @@ const requestOnetimePassword = (req: Request, res: Response<any>) => {
 					admin
 						.database()
 						.ref(`users/${phone}`)
-						.update({ code }, () => {
+						.update({ code, codeValid: true }, () => {
 							res.send({ success: true, codeValid: true });
 						});
 				}
