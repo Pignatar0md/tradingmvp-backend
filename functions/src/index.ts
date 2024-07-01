@@ -7,6 +7,7 @@ import requestOnetimePassword from "./request_onetime_password";
 import pingStriga from "./striga/ping_striga";
 import verifyOnetimePassword from "./verify_onetime_password";
 import authenticateUsingOnetimePassword from "./authenticate_using_onetime_password";
+import requestEmailOnetimePassword from "./request_email_onetime_password";
 //
 admin.initializeApp({
 	credential: admin.credential.cert(serviceAccount as admin.ServiceAccount),
@@ -23,6 +24,10 @@ export const getOneTimePassword = functions.https.onRequest(
 );
 export const checkOneTimePassword = functions.https.onRequest(
 	verifyOnetimePassword
+);
+// email validation
+export const getEmailOneTimePassword = functions.https.onRequest(
+	requestEmailOnetimePassword
 );
 export const authUsingOneTimePassword = functions.https.onRequest(
 	authenticateUsingOnetimePassword
