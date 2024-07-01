@@ -31,7 +31,7 @@ const requestOnetimePassword = (req: Request, res: Response<any>) => {
 						.database()
 						.ref(`users/${phone}`)
 						.update({ code, codeValid: true }, () => {
-							res.send({ success: true, codeValid: true });
+							res.status(200).send({ success: true });
 						});
 				}
 			);

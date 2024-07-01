@@ -79,7 +79,14 @@ const requestEmailOnetimePassword = (req: Request, res: Response<any>) => {
 			mailTransport
 				.sendMail(mailOptions)
 				.then(() => {
-					res.status(200).send("Email sent successfully!");
+					admin
+						.database()
+						.ref(`users/${email}`)
+						.update({ code, codeValid: true }, () => {
+							res
+								.status(200)
+								.send({ success: true, message: "Email sent successfully!" });
+						});
 				})
 				.catch((error) => {
 					console.error(

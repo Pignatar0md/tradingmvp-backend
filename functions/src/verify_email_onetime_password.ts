@@ -1,28 +1,27 @@
 import admin from "firebase-admin";
 import { Request, Response } from "express";
 
-const verifyOnetimePassword = (
+const verifyEmailOnetimePassword = (
 	req: Request,
 	res: Response<any>
 ): Promise<void> => {
-	if (!req.body.phone || !req.body.code) {
+	if (!req.body.email || !req.body.code) {
 		res.status(422).send({
-			error: "Phone and code must be provided",
+			error: "email and code must be provided",
 		});
 	}
 
-	const phone = String(req.body.phone).replace(/[^\d]/g, "");
+	const email = String(req.body.email);
 	const code = parseInt(req.body.code);
 
 	return admin
 		.auth()
-		.getUser(phone)
+		.getUserByEmail(email)
 		.then(() => {
-			const ref = admin.database().ref(`users/${phone}`);
+			const ref = admin.database().ref(`users/${email}`);
 			ref.on("value", (snapshot) => {
 				ref.off();
 				const user = snapshot.val();
-
 				if (user.code !== code || !user.codeValid) {
 					res.status(422).send({ error: "code not valid" });
 				}
@@ -35,4 +34,4 @@ const verifyOnetimePassword = (
 		});
 };
 
-export default verifyOnetimePassword;
+export default verifyEmailOnetimePassword;
