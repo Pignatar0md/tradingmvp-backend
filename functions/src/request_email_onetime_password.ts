@@ -70,7 +70,7 @@ const requestEmailOnetimePassword = (req: Request, res: Response<any>) => {
 					: enContent;
 			const mailOptions = {
 				from: {
-					name: "Marcelo from Nata",
+					name: "The N.A.T.A. team",
 					address: gmailEmail,
 				},
 				to: email,
