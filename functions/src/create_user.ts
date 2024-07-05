@@ -1,7 +1,7 @@
 import admin from "firebase-admin";
 import { Request, Response } from "express";
 
-const newUser = (req: Request, res: Response<any>) => {
+const newUserByPhone = (req: Request, res: Response<any>) => {
 	if (!req.body.phone) {
 		return res.status(422).send({
 			error: "Bad input",
@@ -22,4 +22,29 @@ const newUser = (req: Request, res: Response<any>) => {
 	return;
 };
 
-export default newUser;
+const newUserByEmail = (req: Request, res: Response<any>) => {
+	if (!req.body.email || !req.body.name || !req.body.lastName) {
+		return res.status(422).send({
+			error: "Bad input",
+		}) as any;
+	}
+
+	const email = String(req.body.email);
+	const lastName = String(req.body.lastName);
+	const name = String(req.body.name);
+
+	admin
+		.auth()
+		.createUser({
+			email,
+			displayName: name + " " + lastName,
+			password: req.body.password,
+		})
+		.then((user: any) => {
+			res.send(user);
+		})
+		.catch((error: any) => res.status(421).send({ error }));
+	return;
+};
+
+export { newUserByPhone, newUserByEmail };

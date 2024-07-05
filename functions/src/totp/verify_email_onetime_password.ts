@@ -18,19 +18,20 @@ const verifyEmailOnetimePassword = (
 		.auth()
 		.getUserByEmail(email)
 		.then(() => {
-			const ref = admin.database().ref(`users/${email}`);
+			const emailWithoutDot = email.replace(".", "");
+			const ref = admin.database().ref(`users/${emailWithoutDot}`);
 			ref.on("value", (snapshot) => {
 				ref.off();
 				const user = snapshot.val();
-				if (user.code !== code || !user.codeValid) {
+				if (user.emailCode !== code || !user.emailCodeValid) {
 					res.status(422).send({ error: "code not valid" });
 				}
-				ref.update({ codeValid: false });
+				ref.update({ emailCodeValid: false, emailVerified: true });
 				res.status(200).send({ success: true });
 			});
 		})
 		.catch((error) => {
-			res.status(422).send({ error });
+			res.status(422).send({ error: "wtf?! " + error });
 		});
 };
 

@@ -1,14 +1,17 @@
 import * as admin from "firebase-admin";
 import * as functions from "firebase-functions";
 import * as serviceAccount from "./serviceAccount.json";
-import newUser from "./create_user";
+
+import { newUserByEmail, newUserByPhone } from "./create_user";
+
 import newStrigaUser from "./striga/create_striga_user";
-import requestOnetimePassword from "./request_onetime_password";
 import pingStriga from "./striga/ping_striga";
-import verifyOnetimePassword from "./verify_onetime_password";
-import authenticateUsingOnetimePassword from "./authenticate_using_onetime_password";
-import requestEmailOnetimePassword from "./request_email_onetime_password";
-import verifyEmailOnetimePassword from "./verify_email_onetime_password";
+
+import requestOnetimePassword from "./totp/request_onetime_password";
+import verifyOnetimePassword from "./totp/verify_onetime_password";
+import verifyEmailOnetimePassword from "./totp/verify_email_onetime_password";
+import requestEmailOnetimePassword from "./totp/request_email_onetime_password";
+import authenticateUsingOnetimePassword from "./totp/authenticate_using_onetime_password";
 //
 admin.initializeApp({
 	credential: admin.credential.cert(serviceAccount as admin.ServiceAccount),
@@ -17,7 +20,8 @@ admin.initializeApp({
 // test striga APIs
 export const handshakeStriga = functions.https.onRequest(pingStriga);
 // create user
-export const createUser = functions.https.onRequest(newUser);
+export const createUserByPhone = functions.https.onRequest(newUserByPhone);
+export const createUserByEmail = functions.https.onRequest(newUserByEmail);
 export const createStrigaUser = functions.https.onRequest(newStrigaUser);
 // phone validation
 export const getOneTimePassword = functions.https.onRequest(
@@ -37,3 +41,6 @@ export const checkEmailOneTimePassword = functions.https.onRequest(
 export const authUsingOneTimePassword = functions.https.onRequest(
 	authenticateUsingOnetimePassword
 );
+// export const authEmailhUsingOneTimePassword = functions.https.onRequest(
+// 	() => {}
+// );
