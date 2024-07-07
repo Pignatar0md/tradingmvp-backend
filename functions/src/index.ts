@@ -3,6 +3,7 @@ import * as functions from "firebase-functions";
 import * as serviceAccount from "./serviceAccount.json";
 
 import { newUserByEmail, newUserByPhone } from "./create_user";
+import { addPhoneToUserByEmail } from "./update_user";
 
 import newStrigaUser from "./striga/create_striga_user";
 import pingStriga from "./striga/ping_striga";
@@ -44,3 +45,5 @@ export const authUsingOneTimePassword = functions.https.onRequest(
 // export const authEmailhUsingOneTimePassword = functions.https.onRequest(
 // 	() => {}
 // );
+//updates
+export const addPhoneToUser = functions.https.onRequest(addPhoneToUserByEmail);

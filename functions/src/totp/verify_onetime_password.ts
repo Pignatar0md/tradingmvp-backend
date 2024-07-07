@@ -27,10 +27,10 @@ const verifyOnetimePassword = (
 				const user = snapshot.val();
 
 				if (user.phoneCode !== code || !user.phoneCodeValid) {
-					res.status(422).send({ error: "code not valid" });
+					return res.status(422).send({ error: "code not valid" });
 				}
 				ref.update({ phoneCodeValid: false, phoneVerified: true });
-				res.status(200).send({ success: true });
+				return res.status(200).send({ success: true });
 			});
 		})
 		.catch((error) => {

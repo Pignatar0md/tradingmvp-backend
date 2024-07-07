@@ -24,11 +24,11 @@ const authenticateUsingOnetimePassword = (
 				const user = snapshot.val();
 
 				if (user.code !== code || !user.codeValid) {
-					res.status(422).send({ error: "code not valid" });
+					return res.status(422).send({ error: "code not valid" });
 				}
 
 				ref.update({ codeValid: false });
-				admin
+				return admin
 					.auth()
 					.createCustomToken(phone)
 					.then((token: string) => {

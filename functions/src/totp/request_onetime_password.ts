@@ -12,7 +12,7 @@ const requestOnetimePassword = (req: Request, res: Response<any>) => {
 
 	const phone = String(req.body.phone).replace(/[^\d]/g, "");
 	const email = String(req.body.email);
-	admin
+	return admin
 		.auth()
 		.getUserByEmail(email)
 		.then(() => {

@@ -10,7 +10,7 @@ const requestEmailOnetimePassword = (req: Request, res: Response<any>) => {
 	}
 	const email = String(req.body.email);
 
-	admin
+	return admin
 		.auth()
 		.getUserByEmail(email)
 		.then(() => {
