@@ -16,21 +16,23 @@ const authenticateUsingOnetimePassword = (
 
 	return admin
 		.auth()
-		.getUser(phone)
-		.then(() => {
-			const ref = admin.database().ref(`users/${phone}`);
+		.getUserByPhoneNumber(phone)
+		.then((userRecord) => {
+			const { email } = userRecord;
+			const emailWithoutDot = email?.replace(".", "");
+			const ref = admin.database().ref(`users/${emailWithoutDot}`);
 			ref.on("value", (snapshot) => {
 				ref.off();
 				const user = snapshot.val();
 
-				if (user.code !== code || !user.codeValid) {
+				if (user.phoneCode !== code || !user.phoneCodeValid) {
 					return res.status(422).send({ error: "code not valid" });
 				}
 
 				ref.update({ codeValid: false });
 				return admin
 					.auth()
-					.createCustomToken(phone)
+					.createCustomToken(emailWithoutDot!)
 					.then((token: string) => {
 						res.send({ token });
 					});

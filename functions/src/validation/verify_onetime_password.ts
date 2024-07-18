@@ -6,13 +6,11 @@ const verifyOnetimePassword = (
 	res: Response<any>
 ): Promise<void> => {
 	if (!req.body.code || !req.body.email) {
-		// if (!req.body.phone || !req.body.code || !req.body.email) {
 		res.status(422).send({
 			error: "Email and code must be provided",
 		});
 	}
 
-	// const phone = String(req.body.phone).replace(/[^\d]/g, "");
 	const code = parseInt(req.body.code);
 	const email = String(req.body.email);
 
