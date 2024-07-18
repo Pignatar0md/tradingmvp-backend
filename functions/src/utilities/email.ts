@@ -1,22 +1,86 @@
 import nodemailer from "nodemailer";
 import * as functions from "firebase-functions";
-import { Response } from "express";
-import {
-	enEmailContent,
-	enEmailSender,
-	esEmailContent,
-	esEmailSender,
-	ptEmailContent,
-	ptEmailSender,
-} from "../languages/email";
 
-export const sendEmail = (
-	language: string,
-	email: string,
-	code: number,
-	callbackSuccess: () => void,
-	callbackError: (error: any) => Response<any, Record<string, any>>
-) => {
+import {
+	EmailMessageType,
+	ManageEmailContent,
+	SendEmail,
+} from "../types/email";
+import {
+	ptWelcomeEmailContent,
+	ptEmailSender,
+	ptAuthenticationEmailContent,
+} from "../languages/pt/email";
+import {
+	esAuthenticationEmailContent,
+	esEmailSender,
+	esWelcomeEmailContent,
+} from "../languages/es/email";
+import {
+	enAuthenticationEmailContent,
+	enEmailSender,
+	enWelcomeEmailContent,
+} from "../languages/en/email";
+
+const manageEmailContent = ({
+	emailMessageType,
+	language,
+	email,
+	code,
+}: ManageEmailContent) => {
+	const isSpanish = language === "es";
+	const isPortuguese = language === "pt";
+	const ptOrEnEmailSender = isPortuguese ? ptEmailSender : enEmailSender;
+	const emailSenderName = isSpanish ? esEmailSender : ptOrEnEmailSender;
+
+	const enContentType = (emailMsgType: EmailMessageType) => {
+		const content = {
+			accountAuthentication: enAuthenticationEmailContent(email, code),
+			accountValidation: enWelcomeEmailContent(email, code),
+		};
+
+		return content[emailMsgType];
+	};
+
+	const esContentType = (emailSmgType: EmailMessageType) => {
+		const content = {
+			accountAuthentication: esAuthenticationEmailContent(email, code),
+			accountValidation: esWelcomeEmailContent(email, code),
+		};
+
+		return content[emailSmgType];
+	};
+
+	const ptContentType = (emailMsgType: EmailMessageType) => {
+		const content = {
+			accountAuthentication: ptAuthenticationEmailContent(email, code),
+			accountValidation: ptWelcomeEmailContent(email, code),
+		};
+
+		return content[emailMsgType];
+	};
+
+	const ptOrEnUserContent = isPortuguese
+		? ptContentType(emailMessageType)
+		: enContentType(emailMessageType);
+	const userContent = isSpanish
+		? esContentType(emailMessageType)
+		: ptOrEnUserContent;
+
+	return {
+		emailSenderName,
+		userContent,
+	};
+};
+
+export const sendEmail = ({
+	emailMessageType,
+	language,
+	email,
+	code,
+	callbackSuccess,
+	callbackError,
+}: SendEmail) => {
 	const gmailEmail = functions.config().gmail.email;
 	const gmailPassword = functions.config().gmail.password;
 
@@ -30,19 +94,13 @@ export const sendEmail = (
 			pass: gmailPassword,
 		},
 	});
-	const isSpanish = language === "es";
-	const isPortuguese = language === "pt";
 
-	const emailSenderName = isSpanish
-		? esEmailSender
-		: isPortuguese
-		? ptEmailSender
-		: enEmailSender;
-	const userContent = isSpanish
-		? esEmailContent(email, code)
-		: isPortuguese
-		? ptEmailContent(email, code)
-		: enEmailContent(email, code);
+	const { emailSenderName, userContent } = manageEmailContent({
+		emailMessageType,
+		language,
+		email,
+		code,
+	});
 	const mailOptions = {
 		from: {
 			name: emailSenderName,
