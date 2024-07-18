@@ -29,6 +29,17 @@ const newUserByEmail = (req: Request, res: Response<any>) => {
 		}) as any;
 	}
 
+	// const checkPassword = (password: string) => {
+	// 	const re = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,16}$/;
+	// 	return re.test(password);
+	// };
+
+	// if (!checkPassword(req.body.password)) {
+	// 	return res.status(422).send({
+	// 		error: "Bad password",
+	// 	}) as any;
+	// }
+
 	const email = String(req.body.email);
 	const lastName = String(req.body.lastName);
 	const name = String(req.body.name);
@@ -38,7 +49,7 @@ const newUserByEmail = (req: Request, res: Response<any>) => {
 		.createUser({
 			email,
 			displayName: name + " " + lastName,
-			password: req.body.password,
+			// password: req.body.password,
 		})
 		.then((user: any) => {
 			res.send(user);
