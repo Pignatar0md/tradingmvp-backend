@@ -2,7 +2,7 @@ import * as admin from "firebase-admin";
 import { Request, Response } from "express";
 import { sendEmail } from "../utilities/email";
 
-const requestEmailOnetimePassword = (req: Request, res: Response<any>) => {
+const requestEmailAuthOnetimePassword = (req: Request, res: Response<any>) => {
 	if (!req.body.email) {
 		return res.status(422).send({
 			error: "You must provide an e-mail address",
@@ -29,7 +29,7 @@ const requestEmailOnetimePassword = (req: Request, res: Response<any>) => {
 			const callbackError = (error: any) =>
 				res.status(500).send({ message: "Error sending email.", error });
 			sendEmail({
-				emailMessageType: req.body.mailMessageType,
+				emailMessageType: "accountAuthentication",
 				language: req.body.language,
 				email,
 				code,
@@ -44,4 +44,4 @@ const requestEmailOnetimePassword = (req: Request, res: Response<any>) => {
 		});
 };
 
-export default requestEmailOnetimePassword;
+export default requestEmailAuthOnetimePassword;

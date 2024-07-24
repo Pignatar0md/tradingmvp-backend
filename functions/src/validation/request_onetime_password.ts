@@ -20,7 +20,7 @@ const requestOnetimePassword = (req: Request, res: Response<any>) => {
 			const code = Math.floor(Math.random() * 8999 + 1000);
 			Twilio.messages.create(
 				{
-					body: `Your code is ${code}`,
+					body: `Your validation code is ${code}`,
 					to: `+${phone}`,
 					from: functions.config().twilio.phone_number_twilio,
 				},
