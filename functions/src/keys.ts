@@ -10,4 +10,5 @@ export const phone_number_twilio = process.env.PHONE_NUMBER_TWILIO;
 export const STRIGA_SERVICES = {
 	auth: "/authenticate",
 	createUser: "/user/create",
+	verifyEmail: "/user/verify-email",
 };

@@ -7,6 +7,7 @@ import { addPhoneToUserByEmail } from "./update_user";
 
 import newStrigaUser from "./striga/create_striga_user";
 import pingStriga from "./striga/ping_striga";
+import verifyStrigaEmailAddress from "./striga/verify_striga_email_address";
 
 import authenticateByEmailUsingOnetimePassword from "./auth/authenticate_using_onetime_password_email";
 import authenticateUsingOnetimePassword from "./auth/authenticate_using_onetime_password";
@@ -55,4 +56,8 @@ export const addPhoneToUser = functions.https.onRequest(addPhoneToUserByEmail);
 // );
 export const getEmailAuthOneTimePassword = functions.https.onRequest(
 	requestEmailAuthOnetimePassword
+);
+
+export const verifyStrigaEmailAddr = functions.https.onRequest(
+	verifyStrigaEmailAddress
 );
